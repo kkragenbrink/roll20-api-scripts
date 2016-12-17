@@ -4,13 +4,18 @@
 
 var BIAS = 45; // Default rotation of your token, in degrees.
 var ROTATIONS = [0, 45, 90, 135, 180, 225, 270, 315]; // Possible snaps;
-var SNAP_TO_GRID = true; // Whether to snap.
+var SNAP_TO_GRID = false; // Whether to snap.
+var DEBUG = false;
+
+function debug (msg) {
+    if (DEBUG) log(msg);
+}
 
 var calculateRotation = function (from, to) {
     var deltaY = to.top - from.top;
     var deltaX = to.left - from.left;
-    log('to.top=' + to.top + ', to.left=' + to.left);
-    log('from.top=' + from.top + ', from.left=' + from.left);
+    debug('to.top=' + to.top + ', to.left=' + to.left);
+    debug('from.top=' + from.top + ', from.left=' + from.left);
     
     var angleInDegrees = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
     angleInDegrees += BIAS;
@@ -19,7 +24,7 @@ var calculateRotation = function (from, to) {
     if (angleInDegrees < 0) { angleInDegrees += 360; }
     if (SNAP_TO_GRID) { angleInDegrees = closestRotation(angleInDegrees); }
     
-    log('angle=' + angleInDegrees);
+    debug('angle=' + angleInDegrees);
     return angleInDegrees;
     
 }
@@ -34,12 +39,13 @@ var closestRotation = function (angle) {
         }
     }
     
-    log('current=' + current);
+    debug('current=' + current);
     return current;
 }
 
 var isObjectToken = function (obj) {
-    return obj.get('layer') === 'objects';
+    debug('represents=' + obj.get('represents'))
+    return obj.get('represents') !== null && obj.get('represents') !== '';
 }
 
 var hasObjectMoved = function (obj, prev) {
